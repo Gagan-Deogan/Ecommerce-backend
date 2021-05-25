@@ -1,8 +1,9 @@
+const mySecret = process.env['mysecret']
 const mongoose = require("mongoose");
-const yenv = require("yenv");
-const env = yenv("app.yaml", { env: "env_variables" });
+// const yenv = require("yenv");
+// const env = yenv("app.yaml", { env: "env_variables" });
 
-const mySecret = env["DBPASSWORD"];
+// const mySecret = env["DBPASSWORD"];
 
 const initializeDBConnection = async () => {
   try {
@@ -14,6 +15,7 @@ const initializeDBConnection = async () => {
         useCreateIndex: true,
       }
     );
+    console.log("db connected")
   } catch (error) {
     return error;
   }

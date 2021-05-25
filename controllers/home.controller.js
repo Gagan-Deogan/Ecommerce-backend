@@ -36,6 +36,6 @@ exports.getHomeData = async (req, res) => {
     res.status(200).json({ success: true, data:{ bestSellers, bestDeals, tools:categoryTools.products , plants:categoryPlants.products }  })
   
   } catch (err) {
-    res.status(503).json({ success:false, error:err.message })
+    res.status(500).json({ success:false, error:err.message })
   }
 }

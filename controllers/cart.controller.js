@@ -10,7 +10,7 @@ exports.getCartlist =  async (req,res) =>{
     else
       res.status(200).json({success:true, data:[]})
   }catch(err){
-    res.status(503).json({success: false, error: err.message})
+    res.status(500).json({success: false, error: err.message})
   }
 }
 
@@ -30,7 +30,7 @@ exports.addProductToCart = async (req, res) =>{
     }
     res.status(200).json({success:true, msg:"Product Added"})
   }catch(err){
-    res.status(503).json({success:false, error:err.message})
+    res.status(500).json({success:false, error:err.message})
   }
 }
 
@@ -52,7 +52,7 @@ exports.updateCartProduct = async (req, res) =>{
         throw Error("No Cart present");
     }
   }catch(err){
-    res.status(503).json({success:false, error:err.message})
+    res.status(500).json({success:false, error:err.message})
   }
 }
 
@@ -65,6 +65,6 @@ exports.removeFormCart = async (req, res) =>{
       res.status(200).json({success:true, msg:"Product Removed"})
     }
   }catch(err){
-    res.status(503).json({success:false, error:err.message})
+    res.status(500).json({success:false, error:err.message})
   }
 }

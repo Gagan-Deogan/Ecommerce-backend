@@ -13,7 +13,7 @@ exports.getAllProducts = async (req, res) => {
     const products = await Product.find({},excludeFields);
     res.status(200).json({ success: true, data:products })
   }catch(err){
-    res.status(503).json({ success:false, error:err.message })
+    res.status(500).json({ success:false, error:err.message })
   }
 }
 
@@ -36,7 +36,7 @@ exports.newProduct = async (req, res) => {
 
     res.status(201).json({ success:true, data:savedProduct })
   } catch (err) {
-    res.status(503).json({ success:false, error:err.message })
+    res.status(500).json({ success:false, error:err.message })
   }
 }
 
@@ -54,6 +54,6 @@ exports.updateProduct = async(req, res) =>{
 
     res.status(200).json({ success: true, data:product })
   }catch(err){
-    res.status(503).json({ success:false, error:err.message })
+    res.status(500).json({ success:false, error:err.message })
   }
 }

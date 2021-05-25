@@ -13,6 +13,6 @@ exports.getProductByCategory = async(req, res)=>{
     const {products, name } = await category.populate(populateOptions).execPopulate();
     res.status(200).json({ success:true, data:products })
   }catch (err){
-    res.status(503).json({ success:false, error:err.message })
+    res.status(500).json({ success:false, error:err.message })
   }
 }

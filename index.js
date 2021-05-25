@@ -29,7 +29,7 @@ app.get("/", (request, response) => {
 });
 
 app.use((req, res) => {
-  res.status(404).json({
+  res.status(500).json({
     success: false,
     message: "route not found on server, please check",
   });
@@ -38,8 +38,7 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   res.status(500).json({
     success: false,
-    message: "error occured, see the errMessage key for more details",
-    errorMessage: err.message,
+    error: err.message,
   });
 });
 
