@@ -5,7 +5,7 @@ const products = require("./routes/products.router.js");
 const categories = require("./routes/categories.router.js");
 const users = require("./routes/users.router.js");
 const carts = require("./routes/carts.router.js");
-const { initializeDBConnection } = require("./db/db.connect.js");
+const { initializeDBConnection } = require("./config/db.connect.js");
 const cors = require("cors");
 
 const app = express();
