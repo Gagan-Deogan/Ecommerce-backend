@@ -1,6 +1,8 @@
 const { User } = require("../models/user.model")
+const { issueJWT } = require("../utils/auth")
 const bcrypt = require("bcrypt")
 const saltRounds = 10;
+
 exports.passwordsEncriptor = async(req, res, next) => {
   const { password } = req.body
   try{
@@ -13,17 +15,21 @@ exports.passwordsEncriptor = async(req, res, next) => {
     res.status(500).json({success:false, error : err.message})
   }
 }
+
 exports.userLogin = async(req, res)=>{
   try{
   const {email , password} = req.body;
-  const user = await User.findOne({email:email},{_v:0});
+  const user = await User.findOne({email:email},{__v:0});
   if(!user){
     res.status(200).json({ success:false, data:"No User Exists with this Email" })
   }else{
     const match = await bcrypt.compare( password, user.password )
     if(match){
       user.password = undefined;
-      res.status(200).json({success:true, data:user})
+      const jwt = issueJWT(user._id)
+      res.status(200).json({success:true, data:{user , 
+      token:jwt.token, expiresIn:jwt.expires 
+      }})
     }else{
       res.status(200).json({ success:false, data:"Invalid Email/Password" })
     }
