@@ -1,51 +1,51 @@
 const { User } = require("../models/user.model")
-const { issueJWT } = require("../utils/auth")
-const bcrypt = require("bcrypt")
-const saltRounds = 10;
+const { issueJWT, generateHash, isValidPassword } = require("../utils/security.utils")
 
-exports.passwordsEncriptor = async(req, res, next) => {
-  const { password } = req.body
-  try{
-    if(!password){
-      throw Error("Something went worng")
-    } 
-    req.body.password = await bcrypt.hash(password, saltRounds);
-    next()
-  }catch(err){
-    res.status(500).json({success:false, error : err.message})
-  }
-}
 
-exports.userLogin = async(req, res)=>{
+const userLogin = async(req, res) => {
   try{
-  const {email , password} = req.body;
-  const user = await User.findOne({email:email},{__v:0});
-  if(!user){
-    res.status(200).json({ success:false, data:"No User Exists with this Email" })
-  }else{
-    const match = await bcrypt.compare( password, user.password )
-    if(match){
-      user.password = undefined;
-      const jwt = issueJWT(user._id)
-      res.status(200).json({success:true, data:{user , 
-      token:jwt.token, expiresIn:jwt.expires 
-      }})
+    const {email , password} = req.body;
+    let user = await User.findOne({email:email},{__v:0});
+    if(user){
+      const match = await isValidPassword( password, user.password )
+      if(match){
+        const jwt = issueJWT(user._id)
+        user.password = undefined;
+        user._id = undefined;
+        res.status(200).json({ 
+          success:true, data:{user , token:jwt.token, expiresIn:jwt.expires} 
+        })
+      }else{
+        res.status(200).json({ success:false, data:"Invalid Email/Password" })
+      }
     }else{
-      res.status(200).json({ success:false, data:"Invalid Email/Password" })
+      res.status(401).json({ success:false, data:"No User Exists with this Email" })
     }
-  }
   }catch(err){
-    res.status(500).json({ success: false, error: err.message})
+    res.status(500).json({ success:false, error:"something went wrong" })
   }
 }
 
-exports.newUser = async(req, res)=>{
+const newUser = async(req, res) => {
+  let user = req.body;
   try{
-    const user = req.body;
-    const NewUser = new User(user);
-    const userSaved = await NewUser.save();
-    res.status(201).json({success:true, data:"successfully added"})
+    if(user && user.password ){
+      user.password = await generateHash(user.password)
+      const NewUser = new User(user);
+      const userSaved = await NewUser.save();
+      res.status(201).json({success:true, data:"successfully added"})
+    }else{
+      throw Error("something went wrong")
+    }
   }catch(err){
     res.status(500).json({ success: false, error: err.message})
   }
 }
+const userDetails = (req, res) => {
+  let {user} = req;
+  user.password = undefined;
+  user._id = undefined;
+  user.__v = undefined;
+  res.status(200).json({success:true, data:user})
+}
+module.exports = {userDetails, newUser, userLogin  }

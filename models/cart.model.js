@@ -18,11 +18,12 @@ const cartItems = new Schema({
 
 const CartShema = new Schema({
   products:[cartItems],
-  _id:{
+  userId:{
     type:Schema.ObjectId,
     ref:"User",
     unique:"user already exists",
     required:"userId required", 
+    index:true
   }
 },
 { timestamps: true }

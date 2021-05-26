@@ -1,9 +1,13 @@
 const express = require("express")
 const router = express.Router();
 const {User} = require("../models/user.model.js")
-const { userLogin , newUser, passwordsEncriptor } = require("../controllers/user.controller")
-router.post("/signup", passwordsEncriptor, newUser)
+const { authenticate } = require("../config/passport")
+const { userLogin , newUser, userDetails } = require("../controllers/user.controller")
+router.post("/signup", newUser)
 
 router.post("/login", userLogin)
+
+router.use(authenticate)
+router.get("/self", userDetails)
 
 module.exports = router;

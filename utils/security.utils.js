@@ -1,14 +1,21 @@
 const jsonwebtoken = require("jsonwebtoken")
+const bcrypt = require("bcrypt")
 const fs = require('fs');
 const path = require('path');
 
 const pathToKey = path.join(__dirname, '..', 'id_rsa_priv.pem');
 const PRIV_KEY = fs.readFileSync(pathToKey, 'utf8');
 
+const generateHash = async(password) =>{
+  const saltRounds = 10;
+  return await bcrypt.hash(password, saltRounds)
+}
 
+const isValidPassword = async (password , hash) =>{
+  return await bcrypt.compare(password , hash)
+}
 
 const issueJWT = (userId) => {
-  console.log("userId",userId)
   const expiresIn = '1d';
 
   const payload = {
@@ -23,4 +30,4 @@ const issueJWT = (userId) => {
   }
 }
 
-module.exports.issueJWT = issueJWT;
+module.exports = {issueJWT, generateHash, isValidPassword };

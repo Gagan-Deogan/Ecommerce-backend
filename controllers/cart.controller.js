@@ -1,36 +1,43 @@
 const { Cart } = require("../models/cart.model")
 const { Product } = require("../models/product.model")
+const {isAlreadyInCart, updateCart} = require("../utils/cart.utils")
 const {extend} = require('lodash');
+
+const populateOptions = {
+  path:'products.details',
+  select:"_id name price discount effectivePrice image"
+}
 
 exports.getCartlist =  async (req,res) =>{
   try{
     const cart = req.cart
     if(cart)
-      res.status(200).json({success:true, data:cart.products})
+      res.status(200).json({ success:true, data:cart.products })
     else
-      res.status(200).json({success:true, data:[]})
+      res.status(200).json({ success:true, data:[] })
   }catch(err){
-    res.status(500).json({success: false, error: err.message})
+    res.status(503).json({success: false, error: err.message})
   }
 }
 
 exports.addProductToCart = async (req, res) =>{
   try{
-    const {cart,user, product } = req
+    const { cart, user, product } = req
+    let updatedCart = {}
     if(cart){
-      if(cart.products.id(product._id)){
+      if(isAlreadyInCart(cart, product)){
         throw Error("Already In cart");
       }
-      let updatedCart = { ...cart, products: cart.products.concat({_id:product._id, details:product._id, quantity:1})}
-      updatedCart = extend( cart, updatedCart )
-      const result = await updatedCart.save();
+      updatedCart = updateCart(cart, product)
+      updatedCart = await updatedCart.save();
+
     }else{
-      let NewCart = new Cart( { _id:user._id, products:[{_id:product._id, details:product._id, quantity:1} ] } );
-      const result = await NewCart.save();
+      let NewCart = new Cart({ userId:user._id, products:[{_id:product._id, details:product._id, quantity:1}] } );
+      updatedCart = await NewCart.save();
     }
-    res.status(200).json({success:true, msg:"Product Added"})
+    res.status(200).json({ success:true, data:"Product Added Successfully" })
   }catch(err){
-    res.status(500).json({success:false, error:err.message})
+    res.status(503).json({success:false, error:err.message})
   }
 }
 
@@ -41,10 +48,10 @@ exports.updateCartProduct = async (req, res) =>{
     if(cart){
       const products = await cart.products.id(product._id)
       if(products){
-        const productsUpdate = extend(products,{quantity:quantity} )
+        const productsUpdate = extend( products, { quantity: quantity } )
         cart.products = extend(cart.products,{productsUpdate})
         await cart.save()
-        res.status(200).json({success:true, msg:"Product Added"})
+        res.status(200).json({success:true, data:"Product updated"})
       }else{
         throw Error("No product in Cart");
       }
@@ -52,7 +59,7 @@ exports.updateCartProduct = async (req, res) =>{
         throw Error("No Cart present");
     }
   }catch(err){
-    res.status(500).json({success:false, error:err.message})
+    res.status(503).json({success:false, error:err.message})
   }
 }
 
@@ -62,9 +69,9 @@ exports.removeFormCart = async (req, res) =>{
     if(cart){
       await cart.products.id(product._id).remove()
       await cart.save()
-      res.status(200).json({success:true, msg:"Product Removed"})
+      res.status(200).json({success:true, data:"Product Removed"})
     }
   }catch(err){
-    res.status(500).json({success:false, error:err.message})
+    res.status(503).json({success:false, error:err.message})
   }
 }

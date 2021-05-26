@@ -4,7 +4,7 @@ const { initializeDBConnection } = require("./config/db.connect.js");
 const passport = require('passport');
 const cors = require("cors");
 const app = express();
-require('./config/passport')(passport); 
+const { initialize } = require('./config/passport'); 
 const home = require("./routes/home.router.js");
 const products = require("./routes/products.router.js");
 const categories = require("./routes/categories.router.js");
@@ -18,7 +18,7 @@ const PORT = 8080;
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use(passport.initialize());
+app.use(initialize());
 app.use("/products", products);
 app.use("/home", home);
 app.use("/categories", categories);

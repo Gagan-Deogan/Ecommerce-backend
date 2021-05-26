@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport")
 const { getProductById } = require("../controllers/params")
 const { getProductDetails, updateProduct, getAllProducts,newProduct } = require("../controllers/product.controller")
+
 
 
 
