@@ -1,16 +1,16 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { initializeDBConnection } = require("./config/db.connect");
-const passport = require('passport');
+const passport = require("passport");
 const cors = require("cors");
 const app = express();
-const { initialize } = require('./config/passport'); 
+const { initialize } = require("./config/passport");
 const home = require("./routes/home.router");
 const products = require("./routes/products.router");
 const categories = require("./routes/categories.router");
 const users = require("./routes/users.router");
 const carts = require("./routes/carts.router");
-const wishlists = require("./routes/wishlist.router") 
+const wishlists = require("./routes/wishlist.router");
 
 initializeDBConnection();
 
@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-  res.status(500).json({
+  res.status(503).json({
     success: false,
     error: "Something went wrong",
   });
