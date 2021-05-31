@@ -2,15 +2,17 @@ const { User } = require("../models/user.model")
 const { Cart } = require("../models/cart.model")
 const { Product } = require("../models/product.model")
 const { Category } = require("../models/category.model")
+const { Wishlist } = require("../models/wishlist.model")
+
 const excludefields = {
   "products._id":0,
   "__v":0
 }
-const cartPopulateOptions = {
-  path:'products.details',
-  select:"_id name price discount effectivePrice image"
+const productsPopulateOptions = {
+  path:'products.product',
+  select:"_id name price discount effectivePrice image avalibility"
 }
-exports.getUserById = async(req, res, next,id) =>{
+const getUserById = async(req, res, next,id) =>{
   try{
     const user = await User.findById(id)
     if(!user){
@@ -23,7 +25,7 @@ exports.getUserById = async(req, res, next,id) =>{
   }
 }
 
-exports.getProductById = async(req, res, next,id) =>{
+const getProductById = async(req, res, next, id) =>{
   try{
     const product = await Product.findById(id)
     if(!product){
@@ -36,7 +38,7 @@ exports.getProductById = async(req, res, next,id) =>{
   }
 }
 
-exports.getCategoryById = async(req, res, next, id)=>{
+const getCategoryById = async(req, res, next, id)=>{
   try{
     const category = await Category.findById(id)
     if(!category){
@@ -50,13 +52,26 @@ exports.getCategoryById = async(req, res, next, id)=>{
   }
 }
 
-exports.getUserCart = async(req, res, next)=>{
+const getUserCart = async(req, res, next)=>{
   try{
     const {user} = req
-    const cart = await Cart.findOne({userId:user._id}).populate(cartPopulateOptions)
+    const cart = await Cart.findOne({userId:user._id}).populate(productsPopulateOptions)
     req.cart = cart;
     next();
   }catch(err){
     res.status(503).json({ success:false, error:err.message })
   }
 }
+
+const getUserWishlist = async( req, res , next ) =>{
+  try{
+    const {user} = req
+    const wishlist = await Wishlist.findOne({userId:user._id}).populate(productsPopulateOptions)
+    req.wishlist = wishlist;
+    next();
+  }catch(err){
+    res.status(503).json({ success:false, error:err.message })
+  }
+}
+
+module.exports = {getUserById, getProductById, getCategoryById, getUserCart, getUserWishlist }

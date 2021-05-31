@@ -1,26 +1,24 @@
 const { Cart } = require("../models/cart.model")
 const { Product } = require("../models/product.model")
 const {isAlreadyInCart, updateCart} = require("../utils/cart.utils")
+const {extractProductfromProducts} = require("../utils/wishlist.utils")
 const {extend} = require('lodash');
 
-const populateOptions = {
-  path:'products.details',
-  select:"_id name price discount effectivePrice image"
-}
-
-exports.getCartlist =  async (req,res) =>{
+const getCartAndWishlist =  async (req,res) =>{
   try{
-    const cart = req.cart
+    const cart = req.cart;
+    const wishlist = req.wishlist;
+    const products = extractProductfromProducts(wishlist)
     if(cart)
-      res.status(200).json({ success:true, data:cart.products })
+      res.status(200).json({ success:true, data:{cartItems:cart.products, wishlist:products} })
     else
-      res.status(200).json({ success:true, data:[] })
+      res.status(200).json({ success:true, data:{cartItems:[] , wishlist:products} })
   }catch(err){
     res.status(503).json({success: false, error: err.message})
   }
 }
 
-exports.addProductToCart = async (req, res) =>{
+const addProductToCart = async (req, res) =>{
   try{
     const { cart, user, product } = req
     let updatedCart = {}
@@ -32,7 +30,7 @@ exports.addProductToCart = async (req, res) =>{
       updatedCart = await updatedCart.save();
 
     }else{
-      let NewCart = new Cart({ userId:user._id, products:[{_id:product._id, details:product._id, quantity:1}] } );
+      let NewCart = new Cart({ userId:user._id, products:[{_id:product._id, product:product._id, quantity:1}] } );
       updatedCart = await NewCart.save();
     }
     res.status(200).json({ success:true, data:"Product Added Successfully" })
@@ -41,7 +39,7 @@ exports.addProductToCart = async (req, res) =>{
   }
 }
 
-exports.updateCartProduct = async (req, res) =>{
+const updateCartProduct = async (req, res) =>{
   try{
     const {cart, product} = req
     const { quantity, productId } = req.body
@@ -63,7 +61,7 @@ exports.updateCartProduct = async (req, res) =>{
   }
 }
 
-exports.removeFormCart = async (req, res) =>{
+const removeFormCart = async (req, res) =>{
   try{
     const { cart, product } = req
     if(cart){
@@ -75,3 +73,5 @@ exports.removeFormCart = async (req, res) =>{
     res.status(503).json({success:false, error:err.message})
   }
 }
+
+module.exports = {addProductToCart, addProductToCart, updateCartProduct, removeFormCart}

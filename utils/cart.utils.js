@@ -5,7 +5,7 @@ const isAlreadyInCart = (cart,product) =>{
 }
 
 const updateCart = (cart, product) =>{
-  const updatedCart = { ...cart, products: cart.products.concat({_id:product._id, details:product._id, quantity:1}) }
+  const updatedCart = { ...cart, products: cart.products.concat({_id:product._id, product:product._id, quantity:1}) }
   return extend( cart, updatedCart );
 }
 

@@ -2,7 +2,6 @@ const { Category } = require("../models/category.model")
 const { Product } = require("../models/product.model")
 
 const excludeFields = {
-  avalibility:0,
   fastDelivery:0,
   catagoryid:0,
   rating:0,
@@ -16,7 +15,7 @@ const populateOptions = {
   options: {
       limit: 4
   },
-  select:"_id name price discount effectivePrice image"
+  select:"_id name price discount effectivePrice image avalibility"
 }
 
 exports.getHomeData = async (req, res) => {

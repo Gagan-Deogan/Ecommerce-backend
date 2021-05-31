@@ -26,8 +26,12 @@ const issueJWT = (userId) => {
   const signedToken = jsonwebtoken.sign(payload, PRIV_KEY, { expiresIn: expiresIn, algorithm: 'RS256' });
   return {
     token: "Bearer " + signedToken,
-    expires: expiresIn
   }
 }
+const extractProtectedKey = (user) =>{
+  const userExtracted = { name:user.name, email:user.email, image:user.image }
+  return userExtracted;
+}
 
-module.exports = {issueJWT, generateHash, isValidPassword };
+
+module.exports = {issueJWT, generateHash, isValidPassword, extractProtectedKey };
