@@ -41,7 +41,6 @@ const getCategoryById = async (req, res, next, id) => {
     if (!category) {
       throw Error("No such category Found");
     }
-    console.log(category);
     req.category = category;
     next();
   } catch (err) {

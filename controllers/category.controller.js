@@ -9,7 +9,6 @@ const populateOptions = {
 exports.getProductByCategory = async (req, res) => {
   try {
     const { category } = req;
-    console.log(category);
     const { products, name } = await category
       .populate(populateOptions)
       .execPopulate();
