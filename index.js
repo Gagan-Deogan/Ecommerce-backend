@@ -20,23 +20,23 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(initialize());
 
-app.use("/products", products);
-app.use("/home", home);
-app.use("/categories", categories);
-app.use("/users", users);
-app.use("/carts", carts);
-app.use("/wishlists", wishlists);
-
 app.get("/", (req, res) => {
   res.json({ hello: "world" });
 });
-
+app.use("/home", home);
 app.use((err, req, res, next) => {
+  console.log("hello error");
   res.status(503).json({
     success: false,
     error: "Something went wrong",
   });
 });
+app.use("/categories", categories);
+app.use("/products", products);
+app.use("/users", users);
+app.use("/carts", carts);
+app.use("/wishlists", wishlists);
+
 app.use((req, res) => {
   res.status(404).json({
     success: false,

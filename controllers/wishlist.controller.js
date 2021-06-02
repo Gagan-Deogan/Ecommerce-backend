@@ -3,6 +3,7 @@ const {
   isAlreadyInWishlist,
   updateWishlist,
 } = require("../utils/wishlist.utils");
+
 const addProductToWishlist = async (req, res) => {
   try {
     let { wishlist, product } = req;
@@ -17,7 +18,7 @@ const addProductToWishlist = async (req, res) => {
     await wishlist.save();
     res.status(200).json({ success: true, data: message });
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
 };
 

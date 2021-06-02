@@ -6,7 +6,7 @@ const populateOptions = {
     "_id name price discount effectivePrice image rating avalibility label",
 };
 
-exports.getProductByCategory = async (req, res) => {
+const getProductByCategory = async (req, res) => {
   try {
     const { category } = req;
     const { products, name } = await category
@@ -14,6 +14,8 @@ exports.getProductByCategory = async (req, res) => {
       .execPopulate();
     res.status(200).json({ success: true, data: products });
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
 };
+
+module.exports = { getProductByCategory };

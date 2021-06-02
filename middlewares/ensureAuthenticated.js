@@ -8,4 +8,5 @@ const ensureAuthenticated = async (req, res, next) => {
   }
   return;
 };
+
 module.exports = { ensureAuthenticated };

@@ -18,7 +18,7 @@ const populateOptions = {
   select: "_id name price discount effectivePrice image avalibility",
 };
 
-exports.getHomeData = async (req, res) => {
+const getHomeData = async (req, res, next) => {
   try {
     // best seller
     const bestSellers = await Product.find(
@@ -42,18 +42,18 @@ exports.getHomeData = async (req, res) => {
       populateOptions
     );
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: {
-          bestSellers,
-          bestDeals,
-          tools: categoryTools.products,
-          plants: categoryPlants.products,
-        },
-      });
+    res.status(200).json({
+      success: true,
+      data: {
+        bestSellers,
+        bestDeals,
+        tools: categoryTools.products,
+        plants: categoryPlants.products,
+      },
+    });
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
 };
+
+module.exports = { getHomeData };

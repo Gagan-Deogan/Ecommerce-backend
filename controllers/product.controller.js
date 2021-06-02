@@ -8,16 +8,16 @@ const excludeFields = {
   categoryId: 0,
 };
 
-exports.getAllProducts = async (req, res) => {
+const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find({}, excludeFields);
     res.status(200).json({ success: true, data: products });
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
 };
 
-exports.newProduct = async (req, res) => {
+const newProduct = async (req, res) => {
   try {
     const product = req.body;
 
@@ -36,16 +36,16 @@ exports.newProduct = async (req, res) => {
 
     res.status(200).json({ success: true, data: savedProduct });
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
 };
 
-exports.getProductDetails = (req, res) => {
+const getProductDetails = (req, res) => {
   const product = req.product;
   res.status(200).json({ success: true, data: product });
 };
 
-exports.updateProduct = async (req, res) => {
+const updateProduct = async (req, res) => {
   try {
     const productUpdates = req.body;
     let { product } = req;
@@ -54,6 +54,12 @@ exports.updateProduct = async (req, res) => {
 
     res.status(200).json({ success: true, data: product });
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
+};
+module.exports = {
+  getAllProducts,
+  newProduct,
+  getProductDetails,
+  updateProduct,
 };

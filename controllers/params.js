@@ -18,7 +18,7 @@ const getUserById = async (req, res, next, id) => {
     req.user = user;
     next();
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
 };
 
@@ -31,7 +31,7 @@ const getProductById = async (req, res, next, id) => {
     req.product = product;
     next();
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
 };
 
@@ -44,7 +44,7 @@ const getCategoryById = async (req, res, next, id) => {
     req.category = category;
     next();
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
 };
 
@@ -57,7 +57,7 @@ const getUserCart = async (req, res, next) => {
     req.cart = cart;
     next();
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
 };
 
@@ -70,7 +70,7 @@ const getUserWishlist = async (req, res, next) => {
     req.wishlist = wishlist;
     next();
   } catch (err) {
-    res.status(503).json({ success: false, error: err.message });
+    res.status(503).json({ success: false, error: "something went wrong" });
   }
 };
 

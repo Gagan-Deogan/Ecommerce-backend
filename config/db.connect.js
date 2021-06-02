@@ -16,7 +16,7 @@ const initializeDBConnection = async () => {
     );
     console.log("db connected");
   } catch (error) {
-    return error;
+    return console.log(error);
   }
 };
 module.exports = { initializeDBConnection };
