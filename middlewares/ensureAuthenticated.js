@@ -4,7 +4,7 @@ const ensureAuthenticated = async (req, res, next) => {
   if (req.isAuthenticated()) {
     next();
   } else {
-    res.status(401).json({ success: false, error: "Invalid Token" });
+    res.status(401).json({ error: "Invalid Token" });
   }
   return;
 };

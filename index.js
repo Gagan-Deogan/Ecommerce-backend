@@ -11,7 +11,7 @@ const categories = require("./routes/categories.router");
 const users = require("./routes/users.router");
 const carts = require("./routes/carts.router");
 const wishlists = require("./routes/wishlist.router");
-
+const addresses = require("./routes/address.router");
 initializeDBConnection();
 
 const PORT = 8080;
@@ -27,7 +27,6 @@ app.use("/home", home);
 app.use((err, req, res, next) => {
   console.log("hello error");
   res.status(503).json({
-    success: false,
     error: "Something went wrong",
   });
 });
@@ -36,10 +35,9 @@ app.use("/products", products);
 app.use("/users", users);
 app.use("/carts", carts);
 app.use("/wishlists", wishlists);
-
+app.use("/addresses", addresses);
 app.use((req, res) => {
   res.status(404).json({
-    success: false,
     message: "route not found on server, please check",
   });
 });

@@ -43,7 +43,6 @@ const getHomeData = async (req, res, next) => {
     );
 
     res.status(200).json({
-      success: true,
       data: {
         bestSellers,
         bestDeals,
@@ -52,7 +51,7 @@ const getHomeData = async (req, res, next) => {
       },
     });
   } catch (err) {
-    res.status(503).json({ success: false, error: "something went wrong" });
+    res.status(503).json({ error: "something went wrong" });
   }
 };
 

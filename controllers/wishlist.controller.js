@@ -16,9 +16,9 @@ const addProductToWishlist = async (req, res) => {
       message = "Product Added to Wishlist";
     }
     await wishlist.save();
-    res.status(200).json({ success: true, data: message });
+    res.status(200).json({ data: message });
   } catch (err) {
-    res.status(503).json({ success: false, error: "something went wrong" });
+    res.status(503).json({ error: "something went wrong" });
   }
 };
 

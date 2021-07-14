@@ -11,21 +11,18 @@ const getCartAndWishlist = async (req, res) => {
     const products = extractProductfromProducts(wishlist);
     if (cart)
       res.status(200).json({
-        success: true,
         data: { cartItems: cart.products, wishlist: products },
       });
-    else
-      res
-        .status(200)
-        .json({ success: true, data: { cartItems: [], wishlist: products } });
+    else res.status(200).json({ data: { cartItems: [], wishlist: products } });
   } catch (err) {
-    res.status(503).json({ success: false, error: "something went wrong" });
+    res.status(503).json({ error: "something went wrong" });
   }
 };
 
 const addProductToCart = async (req, res) => {
   try {
     const { cart, user, product } = req;
+    console.log(cart, product);
     let updatedCart = {};
     if (cart) {
       if (isAlreadyInCart(cart, product)) {
@@ -34,15 +31,15 @@ const addProductToCart = async (req, res) => {
       updatedCart = updateCart(cart, product);
       updatedCart = await updatedCart.save();
     } else {
-      let NewCart = new Cart({
+      let newCart = new Cart({
         userId: user._id,
         products: [{ _id: product._id, product: product._id, quantity: 1 }],
       });
-      updatedCart = await NewCart.save();
+      await newCart.save();
     }
-    res.status(200).json({ success: true, data: "Product Added Successfully" });
+    res.status(200).json({ data: "Product Added" });
   } catch (err) {
-    res.status(503).json({ success: false, error: "something went wrong" });
+    res.status(503).json({ error: "something went wrong" });
   }
 };
 
@@ -56,7 +53,7 @@ const updateCartProduct = async (req, res) => {
         const productsUpdate = extend(products, { quantity: quantity });
         cart.products = extend(cart.products, { productsUpdate });
         await cart.save();
-        res.status(200).json({ success: true, data: "Product updated" });
+        res.status(200).json({ data: "Product updated" });
       } else {
         throw Error("No product in Cart");
       }
@@ -64,7 +61,7 @@ const updateCartProduct = async (req, res) => {
       throw Error("No Cart present");
     }
   } catch (err) {
-    res.status(503).json({ success: false, error: "something went wrong" });
+    res.status(503).json({ error: "something went wrong" });
   }
 };
 
@@ -74,10 +71,10 @@ const removeFormCart = async (req, res) => {
     if (cart) {
       await cart.products.id(product._id).remove();
       await cart.save();
-      res.status(200).json({ success: true, data: "Product Removed" });
+      res.status(200).json({ data: "Product Removed" });
     }
   } catch (err) {
-    res.status(503).json({ success: false, error: "something went wrong" });
+    res.status(503).json({ error: "something went wrong" });
   }
 };
 

@@ -11,9 +11,9 @@ const excludeFields = {
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find({}, excludeFields);
-    res.status(200).json({ success: true, data: products });
+    res.status(200).json({ data: products });
   } catch (err) {
-    res.status(503).json({ success: false, error: "something went wrong" });
+    res.status(503).json({ error: "something went wrong" });
   }
 };
 
@@ -34,15 +34,15 @@ const newProduct = async (req, res) => {
     category.products.push(savedProduct._id);
     const updatedCategory = await category.save();
 
-    res.status(200).json({ success: true, data: savedProduct });
+    res.status(200).json({ data: savedProduct });
   } catch (err) {
-    res.status(503).json({ success: false, error: "something went wrong" });
+    res.status(503).json({ error: "something went wrong" });
   }
 };
 
 const getProductDetails = (req, res) => {
   const product = req.product;
-  res.status(200).json({ success: true, data: product });
+  res.status(200).json({ data: product });
 };
 
 const updateProduct = async (req, res) => {
@@ -52,9 +52,9 @@ const updateProduct = async (req, res) => {
     product = extend(product, productUpdates);
     product = await product.save();
 
-    res.status(200).json({ success: true, data: product });
+    res.status(200).json({ data: product });
   } catch (err) {
-    res.status(503).json({ success: false, error: "something went wrong" });
+    res.status(503).json({ error: "something went wrong" });
   }
 };
 module.exports = {

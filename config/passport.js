@@ -40,9 +40,7 @@ const authenticate = (req, res, next) => {
     },
     (err, user, info) => {
       if (err || !user) {
-        return res
-          .status(401)
-          .json({ success: false, error: "something went wrong" });
+        return res.status(401).json({ error: "something went wrong" });
       }
       if (user) {
         req.user = user;

@@ -12,9 +12,9 @@ const getProductByCategory = async (req, res) => {
     const { products, name } = await category
       .populate(populateOptions)
       .execPopulate();
-    res.status(200).json({ success: true, data: products });
+    res.status(200).json({ data: products });
   } catch (err) {
-    res.status(503).json({ success: false, error: "something went wrong" });
+    res.status(503).json({ error: "something went wrong" });
   }
 };
 
