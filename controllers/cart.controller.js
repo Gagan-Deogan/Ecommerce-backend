@@ -1,8 +1,13 @@
+const { uuid } = require("uuidv4");
 const { Cart } = require("../models/cart.model");
 const { Product } = require("../models/product.model");
 const { isAlreadyInCart, updateCart } = require("../utils/cart.utils");
 const { extractProductfromProducts } = require("../utils/wishlist.utils");
 const { extend } = require("lodash");
+const yenv = require("yenv");
+const env = yenv("app.yaml", { env: "env_variables" });
+const STRIPE_SECRET_KEY = env["STRIPE_SECRET_KEY"];
+const stripe = require("stripe")(STRIPE_SECRET_KEY);
 
 const getCartAndWishlist = async (req, res) => {
   try {
@@ -22,7 +27,6 @@ const getCartAndWishlist = async (req, res) => {
 const addProductToCart = async (req, res) => {
   try {
     const { cart, user, product } = req;
-    console.log(cart, product);
     let updatedCart = {};
     if (cart) {
       if (isAlreadyInCart(cart, product)) {
@@ -37,7 +41,7 @@ const addProductToCart = async (req, res) => {
       });
       await newCart.save();
     }
-    res.status(200).json({ data: "Product Added" });
+    res.status(201).json({ data: "Product Added" });
   } catch (err) {
     res.status(503).json({ error: "something went wrong" });
   }
@@ -71,17 +75,47 @@ const removeFormCart = async (req, res) => {
     if (cart) {
       await cart.products.id(product._id).remove();
       await cart.save();
-      res.status(200).json({ data: "Product Removed" });
+      res.status(202).json({ data: "Product Removed" });
     }
   } catch (err) {
     res.status(503).json({ error: "something went wrong" });
   }
 };
 
+const checkout = async (req, res) => {
+  try {
+    let { user, cart } = req;
+    const { token, totalEffectivePrice } = req.body;
+    const customer = await stripe.customers.create({
+      email: token.email,
+      source: token.id,
+    });
+
+    const idempotencyKey = uuid();
+    const charge = await stripe.charges.create(
+      {
+        amount: totalEffectivePrice * 100,
+        currency: "INR",
+        customer: customer.id,
+        receipt_email: token.email,
+      },
+      {
+        idempotencyKey,
+      }
+    );
+    cart.products = [];
+    await cart.save();
+    res.status(201).json({ data: "Order Placed" });
+  } catch (err) {
+    console.log("Gagan", { err });
+    res.status(503).json({ error: "something went wrong" });
+  }
+};
 module.exports = {
   getCartAndWishlist,
   addProductToCart,
   addProductToCart,
   updateCartProduct,
   removeFormCart,
+  checkout,
 };

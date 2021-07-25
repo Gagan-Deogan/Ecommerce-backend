@@ -10,6 +10,7 @@ const {
   addProductToCart,
   removeFormCart,
   updateCartProduct,
+  checkout,
 } = require("../controllers/cart.controller");
 const { authenticate } = require("../config/passport");
 
@@ -19,8 +20,8 @@ router.use(getUserCart);
 router.get("/", getUserWishlist, getCartAndWishlist);
 
 router.param("productId", getProductById);
+router.post("/checkout", checkout);
 router.post("/:productId", addProductToCart);
-
 router.put("/:productId", getProductById, updateCartProduct);
 router.delete("/:productId", getProductById, removeFormCart);
 

@@ -8,15 +8,17 @@ const addProductToWishlist = async (req, res) => {
   try {
     let { wishlist, product } = req;
     let message = "";
+    let statusCode = 202;
     if (isAlreadyInWishlist(wishlist, product)) {
       wishlist.products.id(product._id).remove();
       message = "Product Remove from Wishlist";
     } else {
       wishlist.products = updateWishlist(wishlist, product);
       message = "Product Added to Wishlist";
+      statusCode = 201;
     }
     await wishlist.save();
-    res.status(200).json({ data: message });
+    res.status(statusCode).json({ data: message });
   } catch (err) {
     res.status(503).json({ error: "something went wrong" });
   }
