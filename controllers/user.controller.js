@@ -16,18 +16,15 @@ const userLogin = async (req, res) => {
     if (user) {
       const match = await isValidPassword(password, user.password);
       if (match) {
-        const addresses = await Address.find({ userId: user._id });
         const jwt = issueJWT(user._id);
         user = extractProtectedKey(user);
-        res.status(200).json({
-          data: { user: { ...user, addresses }, token: jwt.token },
+        return res.status(200).json({
+          data: { user, token: jwt.token },
         });
       }
-    } else {
-      res.status(422).json({ error: "Invalid Email/Password" });
     }
+    return res.status(422).json({ error: "Invalid Email/Password" });
   } catch (err) {
-    console.log(err);
     res.status(503).json({ error: "something went wrong" });
   }
 };
