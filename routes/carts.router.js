@@ -1,16 +1,28 @@
 const express = require("express");
 const router = express.Router();
-const { getUserById, getUserCart, getProductById } = require("../controllers/params")
-const { getCartlist, addProductToCart, removeFormCart, updateCartProduct } = require("../controllers/cart.controller")
+const {
+  getUserCart,
+  getProductById,
+  getUserWishlist,
+} = require("../controllers/params");
+const {
+  getCartAndWishlist,
+  addProductToCart,
+  removeFormCart,
+  updateCartProduct,
+  checkout,
+} = require("../controllers/cart.controller");
+const { authenticate } = require("../config/passport");
 
-router.param("userId", getUserById)
-router.param("userId", getUserCart)
-router.get("/:userId", getCartlist)
-router.param("productId", getProductById)
-router.post("/:userId/:productId", addProductToCart )
-router.put("/:userId/:productId",getProductById, updateCartProduct )
-router.delete("/:userId/:productId",getProductById, removeFormCart )
+router.use(authenticate);
+router.use(getUserCart);
 
+router.get("/", getUserWishlist, getCartAndWishlist);
 
+router.param("productId", getProductById);
+router.post("/checkout", checkout);
+router.post("/:productId", addProductToCart);
+router.put("/:productId", getProductById, updateCartProduct);
+router.delete("/:productId", getProductById, removeFormCart);
 
 module.exports = router;
