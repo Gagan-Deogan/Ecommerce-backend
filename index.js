@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { initializeDBConnection } = require("./config/db.connect");
-const passport = require("passport");
 const cors = require("cors");
 const app = express();
 const { initialize } = require("./config/passport");
@@ -12,9 +11,11 @@ const users = require("./routes/users.router");
 const carts = require("./routes/carts.router");
 const wishlists = require("./routes/wishlist.router");
 const addresses = require("./routes/address.router");
-initializeDBConnection();
+const yenv = require("yenv");
+const env = yenv("app.yaml", { env: "env_variables" });
+const PORT = env["PORT"];
 
-const PORT = 8080;
+initializeDBConnection();
 
 app.use(bodyParser.json());
 app.use(cors());

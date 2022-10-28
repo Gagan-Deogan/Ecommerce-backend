@@ -7,7 +7,7 @@ const mySecret = env["DBPASSWORD"];
 const initializeDBConnection = async () => {
   try {
     await mongoose.connect(
-      `mongodb+srv://Gagandeep:${mySecret}@videolibaray.licm8.mongodb.net/inventory?retryWrites=true&w=majority`,
+      `mongodb+srv://gagandeep:${mySecret}@cluster0.g9je8sk.mongodb.net/ecommerce?retryWrites=true&w=majority`,
       {
         useUnifiedTopology: true,
         useNewUrlParser: true,
